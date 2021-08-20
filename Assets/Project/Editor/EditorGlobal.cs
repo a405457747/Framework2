@@ -12,7 +12,7 @@ public class EditorGlobal
 
     public static string GetMyOtherVersionPath()
     {
-        return GetMyOtherPath() + "/version.txt";
+        return GetMyOtherPath()  + "/version.txt";
     }
 
     public static string GetMyOtherPath()
