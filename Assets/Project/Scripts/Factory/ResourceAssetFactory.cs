@@ -60,9 +60,9 @@ public class ResourceAssetFactory : IAssetFactory
         return Resources.Load<GameObject>(name);
     }
 
-    public override T LoadScriptableObject<T>(string name)
+    public override T LoadScriptableObject<T>()
     {
-         return Resources.Load<ScriptableObject>(name) as T;
+        return Resources.Load<ScriptableObject>(typeof(T).Name) as T;
     }
 
     // 產生GameObject

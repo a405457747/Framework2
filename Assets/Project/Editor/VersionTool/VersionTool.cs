@@ -14,6 +14,7 @@ using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 public class VersionTool : EditorWindow
 {
@@ -99,7 +100,7 @@ public class VersionTool : EditorWindow
 
     private static void StartBuild()
     {
-        VersionToolData data = Resources.Load<VersionToolData>(nameof(VersionToolData));
+        VersionToolData data = Factorys.GetAssetFactory().LoadScriptableObject<VersionToolData>();
 
         var applicationIdentifier = "";
         BuildTarget buildTarget = default;
@@ -127,11 +128,25 @@ public class VersionTool : EditorWindow
         // EditorUtility.SetDirty(data);
         // EditorGlobal.Refresh();
 
+        ProductConfig config = Factorys.GetAssetFactory()
+            .LoadScriptableObject<ProductConfigList>().list[0];
+        PlayerSettings.companyName = config.CompanyName;
+        PlayerSettings.productName = config.ProductName;
         PlayerSettings.applicationIdentifier = applicationIdentifier;
         PlayerSettings.Android.keyaliasName = alias;
         PlayerSettings.Android.keystoreName = store;
         PlayerSettings.keyaliasPass = pass;
         PlayerSettings.keystorePass = pass;
+        if (config.LandScape)
+        {
+            PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
+        }
+        else
+        {
+            PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
+        }
+
+        SetMatchWidthOrHeight(config);
 
         var pkgPath = GetPackagePath(pkgType, data.Channel);
         if (File.Exists(pkgPath))
@@ -145,6 +160,26 @@ public class VersionTool : EditorWindow
         Application.OpenURL(CreatePackagePath);
         Log.LogPrint("打包成功");
         //EditorUtility.DisplayDialog("版本工具", "打包成功", "ok", "exit");
+    }
+
+    private static void SetMatchWidthOrHeight(ProductConfig config) //横1竖0
+    {
+        float longNumber = config.ScreenLong;
+        float shortNumber = config.ScreenShort;
+
+        var canvasScaler = Game.CanvasTrans.GetComponent<CanvasScaler>();
+        canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+
+        if (config.LandScape)
+        {
+            canvasScaler.referenceResolution = new Vector2(longNumber, shortNumber);
+            canvasScaler.matchWidthOrHeight = 1;
+        }
+        else
+        {
+            canvasScaler.referenceResolution = new Vector2(shortNumber, longNumber);
+            canvasScaler.matchWidthOrHeight = 0;
+        }
     }
 
     private static void LoadByVersionXML()

@@ -86,8 +86,8 @@ public class ResourceAssetProxyFactory : IAssetFactory
         return m_RealFactory.LoadPool(name);
     }
 
-    public override T LoadScriptableObject<T>(string name)
+    public override T LoadScriptableObject<T>()
     {
-        return m_RealFactory.LoadScriptableObject<T>(name);
+        return m_RealFactory.LoadScriptableObject<T>();
     }
 }

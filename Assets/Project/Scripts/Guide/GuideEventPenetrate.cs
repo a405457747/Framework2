@@ -19,9 +19,9 @@ public class GuideEventPenetrate : MonoBehaviour, ICanvasRaycastFilter
 
     public Canvas GetCanvas()
     {
-        return GameObject.Find("Root/Canvas").GetComponent<Canvas>();
+        return Game.CanvasTrans.GetComponent<Canvas>();
     }
-    
+
     public static Vector2 WorldToCanvasPos(Canvas canvas, Vector3 world)
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform,

@@ -8,72 +8,246 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using Excel;
 using UnityEditor;
-using Object = UnityEngine.Object;
+using UnityEngine;
 
 public class ExcelTool : EditorWindow
 {
-    public static readonly string ReadExcelPath = @"C:\Users\SkyAllen\Downloads";
+    public const string FileName = "ProductConfig";
+    private const string format = "\r\n\t";
+    public const string ScriptableObjectReadPath = "Assets/Project/Scripts/ScriptableObject";
+    public const string ScriptableObjectWritePath = "Assets/Project/Resources";
 
-    [MenuItem("Framework/ExcelTool/QuickTest")]
-    public static void QuickTest()
+    public static Dictionary<string, GridMessage> BigDic;
+    private static DataRowCollection collection;
+    private static int row;
+    private static int col;
+    public static string ReadExcelPath = EditorGlobal.GetMyOtherPath();
+
+
+    [MenuItem("Framework/ExcelTool/CreateScriptableObject")]
+    public static void CreateScriptableObject()
     {
-        ReadExcel("t1");
+        ReadExcel();
+        FillBigDic();
+        CreateCS();
     }
 
-    public static Dictionary<string, CreateFieldType> BigDic = new Dictionary<string, CreateFieldType>();
-
-    private static void ReadExcel(string name, int sheetIndex = 0)
+    [MenuItem("Framework/ExcelTool/SetScriptableObjectData")]
+    public static void SetScriptableObjectData()
     {
-        BigDic.Clear();
+        ReadExcel();
+        FillBigDic();
+        SetConfigGenenal<ProductConfigList,ProductConfig>();
+    }
 
-        string excelFullPath = $"{ReadExcelPath}/{name}.xlsx";
+    private static void SetConfigGenenal<TList, TItem>() where TList : ScriptableObject where TItem : class, new()
+    {
+        var listObj = CreateInstance<TList>();
+
+        var f = typeof(TList).GetField("list");
+
+        var t1List = new List<TItem>();
+        for (var i = 1; i < row; i++)
+        {
+            var t1 = new TItem();
+
+            foreach (var kv in BigDic)
+            {
+                var fName = kv.Key;
+                var fType = kv.Value._createFieldType;
+
+                var info = typeof(TItem).GetField(fName);
+
+                switch (fType)
+                {
+                    case CreateFieldType.Null:
+                        break;
+                    case CreateFieldType.INT:
+                        info.SetValue(t1, Convert.ToInt32(GetItemItemStr(fName, i)));
+                        break;
+                    case CreateFieldType.STRING:
+                        info.SetValue(t1, Convert.ToString(GetItemItemStr(fName, i)));
+                        break;
+                    case CreateFieldType.DOUBLE:
+                        info.SetValue(t1, Convert.ToDouble(GetItemItemStr(fName, i)));
+                        break;
+                    case CreateFieldType.BOOL:
+                        info.SetValue(t1, Convert.ToBoolean(GetItemItemStr(fName, i)));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            t1List.Add(t1);
+        }
+
+        f.SetValue(listObj, t1List);
+
+        var path = $"{ScriptableObjectWritePath}/{FileName}List.asset";
+        AssetDatabase.CreateAsset(listObj, path);
+        EditorGlobal.Refresh();
+        Log.LogPrint("SetConfig Success");
+    }
+
+    private static string GetItemItemStr(string filed, int row)
+    {
+        var col = BigDic[filed].belongColumn;
+        var res = collection[row][col].ToString();
+        return res;
+    }
+
+    private static void ReadExcel(int sheetIndex = 0)
+    {
+        var excelFullPath = $"{ReadExcelPath}/{FileName}.xlsx";
 
         var stream = File.Open(excelFullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
         var excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
         var result = excelReader.AsDataSet();
         var t = result.Tables[sheetIndex];
-        var collection = t.Rows;
-        int row = t.Rows.Count;
-        int col = t.Columns.Count;
 
-        List<string> content = new List<string>();
-        for (int c = 0; c < col; c++)
+        collection = t.Rows;
+        row = t.Rows.Count;
+        col = t.Columns.Count;
+    }
+
+    private static void FillBigDic()
+    {
+        BigDic = new Dictionary<string, GridMessage>();
+
+        var contents = new List<string>();
+        for (var c = 0; c < col; c++) contents.Add(collection[0][c].ToString());
+
+        for (var index = 0; index < contents.Count; index++)
         {
-            content.Add(collection[0][c].ToString());
+            var str = contents[index];
+            var t = GetType(str);
+
+            if (BigDic.ContainsKey(t.Item2) == false)
+            {
+                var g = new GridMessage();
+                g.belongColumn = index;
+                g._createFieldType = t.Item1;
+                BigDic.Add(t.Item2, g);
+            }
+            else
+            {
+                throw new Exception("Same Key");
+            }
+        }
+    }
+
+    private static string GetMainContent()
+    {
+        var res = "";
+        foreach (var kv in BigDic)
+        {
+            var name = kv.Key;
+            var g = kv.Value;
+
+            res = $"{res}public {GetCreateFieldTypeStr(g._createFieldType)} {name};{format}";
         }
 
-
-        Log.LogParas(t.Rows[1][3].ToString());
-
-
-        Log.LogParas(t.Columns.Count, t.Rows.Count);
+        return res;
     }
 
-    private static void FillBigDic(List<string> contents)
+    private static string GetListContent()
     {
+        var sb = new StringBuilder();
+        sb.Append($"using System;{format}");
+        sb.Append($"using System.Collections.Generic;{format}");
+        sb.Append($"using UnityEngine;{format}");
+        sb.Append($"[Serializable]{format}");
+        sb.Append($"[CreateAssetMenu]{format}");
+        sb.Append($"public class {FileName}List : ScriptableObject{format}");
+        sb.Append("{");
+        sb.Append($"public List<{FileName}> list = new List<{FileName}>();{format}");
+        sb.Append("}");
+        return sb.ToString();
     }
 
-    private static void CreateCS(List<string> field)
+    private static string GetItemContent()
     {
-        foreach (var f in field)
-        {
-        }
+        var sb = new StringBuilder();
+        sb.Append($"using UnityEngine;{format}");
+        sb.Append($"[System.Serializable]{format}");
+        sb.Append($"public class {FileName}{format}");
+        sb.Append("{");
+        sb.Append(GetMainContent());
+        sb.Append("}");
+        return sb.ToString();
     }
 
-    private static CreateFieldType GetType(string field)
+    private static void CreateCS()
+    {
+        CreateFileCommom(EditorGlobal.GetAssetsPathAbsolute(ScriptableObjectReadPath) + $"/{FileName}.cs",
+            GetItemContent());
+        CreateFileCommom(EditorGlobal.GetAssetsPathAbsolute(ScriptableObjectReadPath) + $"/{FileName}List.cs",
+            GetListContent());
+
+        EditorGlobal.Refresh();
+        Log.LogPrint("Create CS File Success");
+    }
+
+    private static void CreateFileCommom(string path, string content)
+    {
+        if (File.Exists(path)) File.Delete(path);
+
+        var file = new FileStream(path, FileMode.CreateNew);
+        var fileW = new StreamWriter(file, Encoding.UTF8);
+        fileW.Write(content);
+        fileW.Flush();
+        fileW.Close();
+        file.Close();
+    }
+
+    private static string GetCreateFieldTypeStr(CreateFieldType type)
+    {
+        var res = type.ToString();
+        return res.ToLower();
+    }
+
+    private static (CreateFieldType, string) GetType(string field)
     {
         CreateFieldType res = default;
-        return res;
+        var r = new Regex(@"(?<=\()(\w+)(?=\))");
+        var cc = r.Match(field);
+        var val = cc.Value;
+
+        if (val == GetCreateFieldTypeStr(CreateFieldType.INT))
+            res = CreateFieldType.INT;
+        else if (val == GetCreateFieldTypeStr(CreateFieldType.STRING))
+            res = CreateFieldType.STRING;
+        else if (val == GetCreateFieldTypeStr(CreateFieldType.DOUBLE))
+            res = CreateFieldType.DOUBLE;
+        else if (val == GetCreateFieldTypeStr(CreateFieldType.BOOL))
+            res = CreateFieldType.BOOL;
+        else
+            throw new Exception("CreateFieldTypeNull");
+
+        var rName = new Regex(@"(\w+)(?=\()");
+        var valName = rName.Match(field).Value;
+        if (string.IsNullOrEmpty(valName)) throw new Exception("Name is Null");
+
+        return (res, valName);
+    }
+
+    public class GridMessage
+    {
+        public CreateFieldType _createFieldType;
+        public int belongColumn;
     }
 }
 
 public enum CreateFieldType
 {
     Null,
-    Int,
-    String,
-    Float,
-    Bool,
+    INT,
+    STRING,
+    DOUBLE,
+    BOOL
 }

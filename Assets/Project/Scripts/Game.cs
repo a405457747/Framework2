@@ -1,28 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-
-// todo excel工具,excel工具做好了信息的收集比如宽高这些
 public class Game : MonoBehaviour
 {
     private static Game _instance;
-
     public static Game I;
+    public static Transform CanvasTrans => GameObject.Find("Game/Canvas").transform;
+
+    public const string SystemSuffix = "System";
     private readonly Dictionary<string, Panel> _panels = new Dictionary<string, Panel>();
     private readonly Dictionary<string, GameSystem> _systems = new Dictionary<string, GameSystem>();
-    public static string SystemSuffix = "System";
 
     private Game()
     {
     }
 
-    public Transform CanvasTrans => GameObject.Find("Game/Canvas").transform;
-
-    private void Reset()
-    {
-        SetMatchWidthOrHeight(true);
-    }
 
     private void Start()
     {
@@ -49,7 +41,6 @@ public class Game : MonoBehaviour
         I = this;
 
         AddSystem<AudioSystem>();
-
     }
 
     private void Release()
@@ -66,8 +57,8 @@ public class Game : MonoBehaviour
     private void AddSystem<T>() where T : GameSystem
     {
         var systemName = typeof(T).Name;
-        T t = GetComponentInChildren<T>();
-        GameObject go = t.gameObject;
+        var t = GetComponentInChildren<T>();
+        var go = t.gameObject;
 
         go.transform.LocalReset();
 
@@ -116,26 +107,6 @@ public class Game : MonoBehaviour
             _panels[panelName].Release();
             Destroy(_panels[panelName].gameObject);
             _panels.Remove(panelName);
-        }
-    }
-
-    private void SetMatchWidthOrHeight(bool isLandscape) //横1竖0
-    {
-        const float longNumber = 1280;
-        const float shortNumber = 720;
-
-        var canvasScaler = CanvasTrans.GetComponent<CanvasScaler>();
-        canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-
-        if (isLandscape)
-        {
-            canvasScaler.referenceResolution = new Vector2(longNumber, shortNumber);
-            canvasScaler.matchWidthOrHeight = 1;
-        }
-        else
-        {
-            canvasScaler.referenceResolution = new Vector2(shortNumber, longNumber);
-            canvasScaler.matchWidthOrHeight = 0;
         }
     }
 }
