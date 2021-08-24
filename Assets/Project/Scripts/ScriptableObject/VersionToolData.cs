@@ -11,7 +11,7 @@ using UnityEngine;
 public class VersionToolData : ScriptableObject
 {
     public Channel Channel;
-    public PackageType pkgType;
+    public bool Debug;
 }
 
 [System.Serializable]

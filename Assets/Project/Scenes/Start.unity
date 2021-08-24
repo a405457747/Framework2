@@ -131,17 +131,17 @@ PrefabInstance:
     - target: {fileID: 4538834288019846587, guid: 8348bd3733493294e86c727d4c7e6035,
         type: 3}
       propertyPath: m_Name
-      value: Root
+      value: Game
       objectReference: {fileID: 0}
     - target: {fileID: 4538834288019846588, guid: 8348bd3733493294e86c727d4c7e6035,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 21.608831
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4538834288019846588, guid: 8348bd3733493294e86c727d4c7e6035,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.239747
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4538834288019846588, guid: 8348bd3733493294e86c727d4c7e6035,
         type: 3}

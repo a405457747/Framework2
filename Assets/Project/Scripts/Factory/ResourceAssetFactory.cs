@@ -32,32 +32,37 @@ public class ResourceAssetFactory : IAssetFactory
 
     public override Material LoadMaterial(string name)
     {
-        throw new System.NotImplementedException();
+        return null;
     }
 
     public override Font LoadFont(string name)
     {
-        throw new System.NotImplementedException();
+        return null;
     }
 
     public override TextAsset LoadTextAsset(string name)
     {
-        throw new System.NotImplementedException();
+        return null;
     }
 
     public override SpriteAtlas LoadSpriteAtlas(string name)
     {
-        throw new System.NotImplementedException();
+        return null;
     }
 
     public override GameObject LoadPanel(string name)
     {
-        throw new System.NotImplementedException();
+        return Resources.Load<GameObject>(name);
     }
 
     public override GameObject LoadPool(string name)
     {
-        throw new System.NotImplementedException();
+        return Resources.Load<GameObject>(name);
+    }
+
+    public override T LoadScriptableObject<T>(string name)
+    {
+         return Resources.Load<ScriptableObject>(name) as T;
     }
 
     // 產生GameObject
