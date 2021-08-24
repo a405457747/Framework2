@@ -12,12 +12,12 @@ public class EditorGlobal
 
     public static string GetMyOtherVersionPath()
     {
-        return GetMyOtherPath()  + "/version.txt";
+        return GetMyOtherPath() + "/version.txt";
     }
 
     public static string GetMyOtherPath()
     {
-        var p = Path.Combine(EditorGlobal.GetAssetsPathPrev(), "MyOther");
+        var p = Path.Combine(GetAssetsPathPrev(), "MyOther");
         return p;
     }
 

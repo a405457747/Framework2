@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.U2D;
 
 // 將Unity Asset實體化成GameObject的工廠類別

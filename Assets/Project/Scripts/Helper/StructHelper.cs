@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class StructHelper
 {
@@ -19,7 +18,7 @@ public class StructHelper
         a = b;
         b = temp;
     }
-    
+
     public static double GetFractionalPart(double f) //获取小数部分
     {
         return f - Math.Floor(f);
@@ -39,7 +38,7 @@ public class StructHelper
     {
         return Enum.GetValues(typeof(T)).Cast<T>().ToList();
     }
-    
+
     /*
     public static Vector3 GetCursorPos()
     {
@@ -52,5 +51,4 @@ public class StructHelper
         return cursorPos;
     }
     */
-
 }

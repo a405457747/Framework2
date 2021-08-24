@@ -4,9 +4,10 @@
 ⚓ Email: 894982165@qq.com                                                                                  
 ⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵⛵*/
 
+using System;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 [CreateAssetMenu]
 public class VersionToolData : ScriptableObject
 {
@@ -14,7 +15,7 @@ public class VersionToolData : ScriptableObject
     public bool Debug;
 }
 
-[System.Serializable]
+[Serializable]
 public enum Channel
 {
     Null,
@@ -23,11 +24,11 @@ public enum Channel
     Apple
 }
 
-[System.Serializable]
+[Serializable]
 public enum PackageType
 {
     Null,
     aab,
     apk,
-    ipa,
+    ipa
 }

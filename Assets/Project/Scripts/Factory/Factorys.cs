@@ -1,11 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿
 
 // 取得P-BaseDefenseGame中所使用的工廠
 public static class Factorys
 {
-    private static bool m_bLoadFromResource = true;
-    private static IAssetFactory m_AssetFactory = null;
+    private static readonly bool m_bLoadFromResource = true;
+    private static IAssetFactory m_AssetFactory;
 
     // 取得將Unity Asset實作化的工廠
     public static IAssetFactory GetAssetFactory()

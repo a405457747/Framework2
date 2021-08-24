@@ -1,12 +1,18 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class PoolSystem : GameSystem
 {
-    private Dictionary<string, Pool> _pools = new Dictionary<string, Pool>();
+    private readonly Dictionary<string, Pool> _pools = new Dictionary<string, Pool>();
+
+    public PoolSystem(Game game) : base(game)
+    {
+    }
+
+//auto
+    private void Awake()
+    {
+    }
 
     public override void Initialize()
     {
@@ -32,16 +38,4 @@ public class PoolSystem : GameSystem
         else
             Log.LogException(new KeyNotFoundException());
     }
-
-    public PoolSystem(Game game) : base(game)
-    {
-    }
-//auto
-   private void Awake()
-	{
-		
-        
-	}
-	
-        
 }

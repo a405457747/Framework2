@@ -1,14 +1,13 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
-
-public class PurchaseSystem : GameSystem
+﻿public class PurchaseSystem : GameSystem
 {
-    private IPurchase CurPurchase = new UnityIAP();
+    private readonly IPurchase CurPurchase = new UnityIAP();
 
     public PurchaseSystem(Game game) : base(game)
+    {
+    }
+
+//auto
+    private void Awake()
     {
     }
 
@@ -16,12 +15,4 @@ public class PurchaseSystem : GameSystem
     {
         CurPurchase.Buy(i);
     }
-//auto
-   private void Awake()
-	{
-		
-        
-	}
-	
-        
 }

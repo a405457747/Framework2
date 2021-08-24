@@ -1,21 +1,25 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 // 遊戲子系統共用界面
 [RequireComponent(typeof(HaveEvents))]
-public abstract class GameSystem:MonoBehaviour
+public abstract class GameSystem : MonoBehaviour
 {
-	protected Game game = null;
-	public GameSystem( Game game )
-	{
-		this.game = game;
-	}
+    protected Game game;
 
-	public virtual void Initialize()
-	{
-		
-	}
-	public virtual void Release(){}
-	public virtual void EachFrame(){}
+    public GameSystem(Game game)
+    {
+        this.game = game;
+    }
 
+    public virtual void Initialize()
+    {
+    }
+
+    public virtual void Release()
+    {
+    }
+
+    public virtual void EachFrame()
+    {
+    }
 }

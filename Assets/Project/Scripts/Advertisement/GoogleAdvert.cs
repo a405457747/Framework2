@@ -1,27 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class GoogleAdvert : IAdvert
+﻿public class GoogleAdvert : IAdvert
 {
     public void LoadBanner()
     {
-        
     }
 
     public void LoadInsert()
     {
-        
     }
 
     public void LoadAward()
     {
-        
     }
 
     public void LoadInsertAward()
     {
-        
     }
 
     public bool BannerReady()
@@ -46,21 +38,17 @@ public class GoogleAdvert : IAdvert
 
     public void BannerPlay()
     {
-        
     }
 
     public void InsertPlay()
     {
-        
     }
 
     public void AwardPlay()
     {
-        
     }
 
     public void InsertAwardPlay()
     {
-        
     }
 }

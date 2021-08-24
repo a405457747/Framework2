@@ -62,17 +62,14 @@ public class RandomHelper
 
     public class Weight<T>
     {
+        private readonly List<T> _items;
         private readonly Dictionary<int, int[]> _rangeDic;
         private readonly int _sum;
         private readonly List<int> _weights;
-        private readonly List<T> _items;
 
         public Weight(List<int> weights, List<T> items)
         {
-            if (weights.Count != items.Count)
-            {
-                throw new Exception("The count inequality.");
-            }
+            if (weights.Count != items.Count) throw new Exception("The count inequality.");
 
             _rangeDic = new Dictionary<int, int[]>();
 
@@ -93,7 +90,7 @@ public class RandomHelper
             }
 
             _sum = _rangeDic[weights.Count - 1][1];
-            
+
             _weights = weights;
             _items = items;
         }
@@ -111,7 +108,7 @@ public class RandomHelper
 
             return res;
         }
-        
+
         public static int GetWeightByDoubleString(string floatString, int w = 1000000)
         {
             double f = default;

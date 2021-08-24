@@ -1,14 +1,13 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
-
-public class AdvertSystem : GameSystem
+﻿public class AdvertSystem : GameSystem
 {
-    private IAdvert CurAdvert = new GoogleAdvert();
+    private readonly IAdvert CurAdvert = new GoogleAdvert();
 
     public AdvertSystem(Game game) : base(game)
+    {
+    }
+
+//auto
+    private void Awake()
     {
     }
 
@@ -81,12 +80,4 @@ public class AdvertSystem : GameSystem
     {
         base.Release();
     }
-//auto
-   private void Awake()
-	{
-		
-        
-	}
-	
-        
 }

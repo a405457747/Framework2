@@ -1,2 +1,4 @@
-﻿public enum EventType {NullEvent,
-	}
+﻿public enum EventType
+{
+    NullEvent
+}

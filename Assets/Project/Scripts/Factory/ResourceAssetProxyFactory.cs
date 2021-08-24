@@ -1,19 +1,19 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.U2D;
 
 // 做為ResourceAssetFactory的Proxy代理者,會記錄已經載入過的資源
 public class ResourceAssetProxyFactory : IAssetFactory
 {
-    private ResourceAssetFactory m_RealFactory = null; // 實際負責載入的AssetFactory
-    private Dictionary<string, UnityEngine.Object> m_Effects = null;
-    private Dictionary<string, AudioClip> m_Audios = null;
-    private Dictionary<string, Sprite> m_Sprites = null;
+    private readonly Dictionary<string, AudioClip> m_Audios;
+    private readonly Dictionary<string, Object> m_Effects;
+    private readonly ResourceAssetFactory m_RealFactory; // 實際負責載入的AssetFactory
+    private readonly Dictionary<string, Sprite> m_Sprites;
 
     public ResourceAssetProxyFactory()
     {
         m_RealFactory = new ResourceAssetFactory();
-        m_Effects = new Dictionary<string, UnityEngine.Object>();
+        m_Effects = new Dictionary<string, Object>();
         m_Audios = new Dictionary<string, AudioClip>();
         m_Sprites = new Dictionary<string, Sprite>();
     }
@@ -23,12 +23,12 @@ public class ResourceAssetProxyFactory : IAssetFactory
     {
         if (m_Effects.ContainsKey(AssetName) == false)
         {
-            UnityEngine.Object res =
+            var res =
                 m_RealFactory.LoadGameObjectFromResourcePath(ResourceAssetFactory.EffectPath + AssetName);
             m_Effects.Add(AssetName, res);
         }
 
-        return UnityEngine.Object.Instantiate(m_Effects[AssetName]) as GameObject;
+        return Object.Instantiate(m_Effects[AssetName]) as GameObject;
     }
 
     // 產生AudioClip
@@ -36,7 +36,7 @@ public class ResourceAssetProxyFactory : IAssetFactory
     {
         if (m_Audios.ContainsKey(ClipName) == false)
         {
-            UnityEngine.Object res =
+            var res =
                 m_RealFactory.LoadGameObjectFromResourcePath(ResourceAssetFactory.AudioPath + ClipName);
             m_Audios.Add(ClipName, res as AudioClip);
         }
@@ -49,7 +49,7 @@ public class ResourceAssetProxyFactory : IAssetFactory
     {
         if (m_Sprites.ContainsKey(SpriteName) == false)
         {
-            Sprite res = m_RealFactory.LoadSprite(SpriteName);
+            var res = m_RealFactory.LoadSprite(SpriteName);
             m_Sprites.Add(SpriteName, res);
         }
 

@@ -3,17 +3,17 @@ using UnityEngine;
 
 public class Game : MonoBehaviour
 {
+    public const string SystemSuffix = "System";
     private static Game _instance;
     public static Game I;
-    public static Transform CanvasTrans => GameObject.Find("Game/Canvas").transform;
-
-    public const string SystemSuffix = "System";
     private readonly Dictionary<string, Panel> _panels = new Dictionary<string, Panel>();
     private readonly Dictionary<string, GameSystem> _systems = new Dictionary<string, GameSystem>();
 
     private Game()
     {
     }
+
+    public static Transform CanvasTrans => GameObject.Find("Game/Canvas").transform;
 
 
     private void Start()

@@ -1,15 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-public enum ADType
+﻿public enum ADType
 {
     Null,
     Banner,
     Insert,
     Award,
-    InsertAward,
+    InsertAward
 }
 
 public interface IAdvert

@@ -1,10 +1,4 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
-
-public class SaveSystem : GameSystem
+﻿public class SaveSystem : GameSystem
 {
     private readonly ISave CurSave = new UnityJsonSave();
 
@@ -13,6 +7,11 @@ public class SaveSystem : GameSystem
     }
 
     public SaveMap SaveMap => CurSave.SaveMap;
+
+//auto
+    private void Awake()
+    {
+    }
 
     private void Load()
     {
@@ -28,12 +27,4 @@ public class SaveSystem : GameSystem
     {
         return CurSave.GetSaveMapString();
     }
-//auto
-   private void Awake()
-	{
-		
-        
-	}
-	
-        
 }

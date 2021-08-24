@@ -41,7 +41,7 @@ public class ExcelTool : EditorWindow
     {
         ReadExcel();
         FillBigDic();
-        SetConfigGenenal<ProductConfigList,ProductConfig>();
+        SetConfigGenenal<ProductConfigList, ProductConfig>();
     }
 
     private static void SetConfigGenenal<TList, TItem>() where TList : ScriptableObject where TItem : class, new()

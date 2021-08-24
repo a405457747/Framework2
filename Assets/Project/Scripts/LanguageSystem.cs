@@ -1,19 +1,20 @@
 ﻿using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
 
 public class LanguageSystem : GameSystem
 {
+#pragma warning disable 414
+    private int _languageId;
+#pragma warning restore 414
 
     public LanguageSystem(Game game) : base(game)
     {
     }
 
-#pragma warning disable 414
-    private int _languageId;
-#pragma warning restore 414
+//auto
+    private void Awake()
+    {
+    }
+
     private void AutoSetLanguageId()
     {
         switch (Application.systemLanguage)
@@ -37,23 +38,15 @@ public class LanguageSystem : GameSystem
     {
         return "";
     }
+
     public override void Initialize()
     {
         base.Initialize();
         AutoSetLanguageId();
-
     }
 
     public override void Release()
     {
         base.Release();
     }
-//auto
-   private void Awake()
-	{
-		
-        
-	}
-	
-        
 }

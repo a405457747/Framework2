@@ -23,8 +23,8 @@ public class MathHelper
             return 1;
         return GetFactorial(n - 1) * n;
     }
-    
-    
+
+
     public static bool IsEven(int num)
     {
         return (num & 1) != 1;

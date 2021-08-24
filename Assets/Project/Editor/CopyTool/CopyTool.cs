@@ -5,7 +5,7 @@ public class CopyTool : EditorWindow
 {
     //最终输出的数据
     private static string logText;
-    
+
     [MenuItem("GameObject/CopyTool/CopyPosition", false, -100)]
     public static void CopyPosition()
     {
@@ -57,7 +57,7 @@ public class CopyTool : EditorWindow
         logText +=
             $"{obj.transform.localPosition.x}f,{obj.transform.localPosition.y}f,{obj.transform.localPosition.z}f";
     }
-    
+
     [MenuItem("GameObject/CopyTool/CopyPath", priority = 20)]
     private static void CopyPath()
     {

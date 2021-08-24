@@ -7,26 +7,23 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 public class VersionTool : EditorWindow
 {
     private const string alias = "a";
     private const string pass = "yn1234";
-    private static List<Ver> versions = new List<Ver>();
+    private static readonly List<Ver> versions = new List<Ver>();
+    private string addVersionExplain;
+
+    private string addVersionNumber;
     private static string store => EditorGlobal.GetMyOtherPath() + @"\Sign\user.keystore";
     private static string VersionPath => EditorGlobal.GetMyOtherVersionPath();
     private static string CreatePackagePath => EditorGlobal.GetMyOtherPath();
-
-    private string addVersionNumber;
-    private string addVersionExplain;
 
     private void OnGUI()
     {
@@ -50,10 +47,7 @@ public class VersionTool : EditorWindow
             }
         }
 
-        if (GUILayout.Button((new GUIContent("开始打包"))))
-        {
-            StartBuild();
-        }
+        if (GUILayout.Button(new GUIContent("开始打包"))) StartBuild();
 
         EditorGUILayout.EndVertical();
         //GUIUtility.ExitGUI();
@@ -81,9 +75,9 @@ public class VersionTool : EditorWindow
 
     private static string[] GetScenesStr()
     {
-        return new string[]
+        return new[]
         {
-            "Assets/Project/Scenes/Start.unity",
+            "Assets/Project/Scenes/Start.unity"
         };
     }
 
@@ -100,7 +94,7 @@ public class VersionTool : EditorWindow
 
     private static void StartBuild()
     {
-        VersionToolData data = Factorys.GetAssetFactory().LoadScriptableObject<VersionToolData>();
+        var data = Factorys.GetAssetFactory().LoadScriptableObject<VersionToolData>();
 
         var applicationIdentifier = "";
         BuildTarget buildTarget = default;
@@ -128,7 +122,7 @@ public class VersionTool : EditorWindow
         // EditorUtility.SetDirty(data);
         // EditorGlobal.Refresh();
 
-        ProductConfig config = Factorys.GetAssetFactory()
+        var config = Factorys.GetAssetFactory()
             .LoadScriptableObject<ProductConfigList>().list[0];
         PlayerSettings.companyName = config.CompanyName;
         PlayerSettings.productName = config.ProductName;
@@ -138,21 +132,14 @@ public class VersionTool : EditorWindow
         PlayerSettings.keyaliasPass = pass;
         PlayerSettings.keystorePass = pass;
         if (config.LandScape)
-        {
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
-        }
         else
-        {
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
-        }
 
         SetMatchWidthOrHeight(config);
 
         var pkgPath = GetPackagePath(pkgType, data.Channel);
-        if (File.Exists(pkgPath))
-        {
-            File.Delete(pkgPath);
-        }
+        if (File.Exists(pkgPath)) File.Delete(pkgPath);
 
         BuildPipeline.BuildPlayer(GetScenesStr(), pkgPath, buildTarget,
             BuildOptions.None);

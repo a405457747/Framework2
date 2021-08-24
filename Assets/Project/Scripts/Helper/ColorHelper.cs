@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-public class ColorHelper 
+public class ColorHelper
 {
     public static Color GetColor(int r, int g, int b, int a = 255)
     {

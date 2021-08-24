@@ -1,21 +1,23 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class AudioSystem : GameSystem
 {
-private AudioSource _musicAudioSource;
+    private AudioSource _musicAudioSource;
 
 #pragma warning disable 414
-private bool _musicEnable = false;
+    private bool _musicEnable = false;
 #pragma warning restore 414
-private Dictionary<string, AudioSource> _soundAudioSources = new Dictionary<string, AudioSource>();
+    private readonly Dictionary<string, AudioSource> _soundAudioSources = new Dictionary<string, AudioSource>();
 
-    private bool _soundEnable = false;
+    private readonly bool _soundEnable = false;
 
     public AudioSystem(Game game) : base(game)
+    {
+    }
+
+//auto
+    private void Awake()
     {
     }
 
@@ -88,12 +90,4 @@ private Dictionary<string, AudioSource> _soundAudioSources = new Dictionary<stri
                 audioSource.Play();
         }
     }
-//auto
-   private void Awake()
-	{
-		
-        
-	}
-	
-        
 }

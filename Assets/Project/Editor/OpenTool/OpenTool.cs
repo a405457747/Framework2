@@ -16,6 +16,7 @@ public class OpenTool
 
         Application.OpenURL(path);
     }
+
     [MenuItem("Framework/OpenTool/OpenMyOther")]
     public static void OpenMyOther()
     {

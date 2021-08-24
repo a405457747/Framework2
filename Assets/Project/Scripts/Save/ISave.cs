@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface ISave
+﻿public interface ISave
 {
     SaveMap SaveMap { get; set; }
     void Load();
