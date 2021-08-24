@@ -15,13 +15,10 @@ using UnityEngine.UI;
 
 public class VersionTool : EditorWindow
 {
-    private const string alias = "a";
-    private const string pass = "yn1234";
     private static readonly List<Ver> versions = new List<Ver>();
     private string addVersionExplain;
 
     private string addVersionNumber;
-    private static string store => EditorGlobal.GetMyOtherPath() + @"\Sign\user.keystore";
     private static string VersionPath => EditorGlobal.GetMyOtherVersionPath();
     private static string CreatePackagePath => EditorGlobal.GetMyOtherPath();
 
@@ -127,10 +124,11 @@ public class VersionTool : EditorWindow
         PlayerSettings.companyName = config.CompanyName;
         PlayerSettings.productName = config.ProductName;
         PlayerSettings.applicationIdentifier = applicationIdentifier;
-        PlayerSettings.Android.keyaliasName = alias;
-        PlayerSettings.Android.keystoreName = store;
-        PlayerSettings.keyaliasPass = pass;
-        PlayerSettings.keystorePass = pass;
+        PlayerSettings.Android.keyaliasName = "a";
+        PlayerSettings.keyaliasPass = "yn1234";
+        PlayerSettings.keystorePass = "yn1234";
+        PlayerSettings.Android.keystoreName = EditorGlobal.GetMyOtherPath() + @"\Sign\user.keystore";
+
         if (config.LandScape)
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
         else
