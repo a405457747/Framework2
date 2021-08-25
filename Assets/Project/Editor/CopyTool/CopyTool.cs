@@ -42,7 +42,7 @@ public class CopyTool : EditorWindow
         GetContent(obj, flag);
 
         //复制到剪贴板  
-        EditorGlobal.CopyToBoard(logText);
+        EditorGame.CopyToBoard(logText);
     }
 
     private static void GetContent(GameObject obj, int flag)
@@ -63,7 +63,7 @@ public class CopyTool : EditorWindow
     {
         var trans = Selection.activeTransform;
         if (null == trans) return;
-        EditorGlobal.CopyToBoard(GetPath(trans));
+        EditorGame.CopyToBoard(GetPath(trans));
     }
 
     private static string GetPath(Transform trans)

@@ -1,10 +1,19 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 
 public class IOHelper
 {
-    public static void CreateFile(string path)
+    public static void CreateFileByStream(string path, string content)
     {
+        if (File.Exists(path)) File.Delete(path);
+
+        var file = new FileStream(path, FileMode.CreateNew);
+        var fileW = new StreamWriter(file, Encoding.UTF8);
+        fileW.Write(content);
+        fileW.Flush();
+        fileW.Close();
+        file.Close();
     }
 
     public static void CreateDir(string path)

@@ -2,8 +2,10 @@
 using UnityEditor;
 using UnityEngine;
 
-public class EditorGlobal
+public class EditorGame
 {
+    public const string format = "\r\n\t";
+
     public static string GetAssetsPathAbsolute(string willPath)
     {
         var tempPath = willPath.Replace("Assets/", "");

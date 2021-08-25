@@ -20,6 +20,6 @@ public class OpenTool
     [MenuItem("Framework/OpenTool/OpenMyOther")]
     public static void OpenMyOther()
     {
-        Application.OpenURL(EditorGlobal.GetMyOtherPath());
+        Application.OpenURL(EditorGame.GetMyOtherPath());
     }
 }

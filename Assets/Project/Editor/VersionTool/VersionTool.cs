@@ -19,8 +19,8 @@ public class VersionTool : EditorWindow
     private string addVersionExplain;
 
     private string addVersionNumber;
-    private static string VersionPath => EditorGlobal.GetMyOtherVersionPath();
-    private static string CreatePackagePath => EditorGlobal.GetMyOtherPath();
+    private static string VersionPath => EditorGame.GetMyOtherVersionPath();
+    private static string CreatePackagePath => EditorGame.GetMyOtherPath();
 
     private void OnGUI()
     {
@@ -66,7 +66,7 @@ public class VersionTool : EditorWindow
         PlayerSettings.Android.bundleVersionCode += 1;
         PlayerSettings.bundleVersion = StringHelper.GetFormatVersion(GetLastVersion());
 
-        EditorGlobal.CopyToBoard(e);
+        EditorGame.CopyToBoard(e);
         Log.LogPrint("Set Success");
     }
 
@@ -127,7 +127,7 @@ public class VersionTool : EditorWindow
         PlayerSettings.Android.keyaliasName = "a";
         PlayerSettings.keyaliasPass = "yn1234";
         PlayerSettings.keystorePass = "yn1234";
-        PlayerSettings.Android.keystoreName = EditorGlobal.GetMyOtherPath() + @"\Sign\user.keystore";
+        PlayerSettings.Android.keystoreName = EditorGame.GetMyOtherPath() + @"\Sign\user.keystore";
 
         if (config.LandScape)
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;

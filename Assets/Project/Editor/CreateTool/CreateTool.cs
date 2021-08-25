@@ -43,7 +43,7 @@ public class #类名# : GameSystem
 }
 ";
 
-    private static readonly string format = "\r\n\t";
+    private static string format => EditorGame.format;
     private static readonly string CodeCreateDir = $"{Application.dataPath}/Project/Scripts";
 
     private static readonly string PanelInitClassStr =
@@ -116,11 +116,11 @@ public class #类名# : Panel
         var selectFolderPath = AssetDatabase.GetAssetPath(Selection.activeObject);
         var fileFullName = $"{fileName}{fileEx}";
 
-        var realFolderPath = EditorGlobal.GetAssetsPathAbsolute(selectFolderPath);
+        var realFolderPath = EditorGame.GetAssetsPathAbsolute(selectFolderPath);
         var writePath = $"{Path.Combine(realFolderPath, fileFullName)}";
 
         CreateTxt(writePath, fileContain);
-        EditorGlobal.Refresh();
+        EditorGame.Refresh();
 
         var selectFilePath = Path.Combine(selectFolderPath, fileFullName);
         Selection.activeObject = AssetDatabase.LoadAssetAtPath(selectFilePath, typeof(Object));
@@ -137,14 +137,14 @@ public class #类名# : Panel
     [MenuItem("Framework/CreateTool/CreateDirMyOther")]
     private static void CreateDirMyOther()
     {
-        var path = EditorGlobal.GetMyOtherPath();
+        var path = EditorGame.GetMyOtherPath();
         IOHelper.CreateDir(path);
     }
 
     [MenuItem("Framework/CreateTool/CreateVersionTxt")]
     private static void CreateVersionTxt()
     {
-        var path = EditorGlobal.GetMyOtherVersionPath();
+        var path = EditorGame.GetMyOtherVersionPath();
         var content = "<Root>\r\n" + " <Ver Number=\"1\" Explain=\"\" />\r\n" + "</Root>";
         CreateTxt(path, content);
     }
@@ -219,7 +219,7 @@ public class #类名# : Panel
         fileW.Close(); //不需要dispose，下次接着玩
         file.Close(); //fileStrem最后关闭
 
-        EditorGlobal.Refresh();
+        EditorGame.Refresh();
 
         Log.LogPrint("Create System Success");
     }
@@ -281,7 +281,7 @@ public class #类名# : Panel
         w.Close();
         fs.Close();
 
-        EditorGlobal.Refresh();
+        EditorGame.Refresh();
         Log.LogPrint("ReadEventsClass Success");
     }
 
@@ -412,7 +412,7 @@ public class #类名# : Panel
         fileW.Close(); //不需要dispose，下次接着玩
         file.Close(); //fileStrem最后关闭
 
-        EditorGlobal.Refresh();
+        EditorGame.Refresh();
 
         Log.LogPrint("Panel Create Success");
     }

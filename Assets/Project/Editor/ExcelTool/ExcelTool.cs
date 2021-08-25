@@ -25,7 +25,7 @@ public class ExcelTool : EditorWindow
     private static DataRowCollection collection;
     private static int row;
     private static int col;
-    public static string ReadExcelPath = EditorGlobal.GetMyOtherPath();
+    public static string ReadExcelPath = EditorGame.GetMyOtherPath();
 
 
     [MenuItem("Framework/ExcelTool/CreateScriptableObject")]
@@ -90,7 +90,7 @@ public class ExcelTool : EditorWindow
 
         var path = $"{ScriptableObjectWritePath}/{FileName}List.asset";
         AssetDatabase.CreateAsset(listObj, path);
-        EditorGlobal.Refresh();
+        EditorGame.Refresh();
         Log.LogPrint("SetConfig Success");
     }
 
@@ -184,26 +184,16 @@ public class ExcelTool : EditorWindow
 
     private static void CreateCS()
     {
-        CreateFileCommom(EditorGlobal.GetAssetsPathAbsolute(ScriptableObjectReadPath) + $"/{FileName}.cs",
+        IOHelper.CreateFileByStream(EditorGame.GetAssetsPathAbsolute(ScriptableObjectReadPath) + $"/{FileName}.cs",
             GetItemContent());
-        CreateFileCommom(EditorGlobal.GetAssetsPathAbsolute(ScriptableObjectReadPath) + $"/{FileName}List.cs",
+        IOHelper.CreateFileByStream(
+            EditorGame.GetAssetsPathAbsolute(ScriptableObjectReadPath) + $"/{FileName}List.cs",
             GetListContent());
 
-        EditorGlobal.Refresh();
+        EditorGame.Refresh();
         Log.LogPrint("Create CS File Success");
     }
 
-    private static void CreateFileCommom(string path, string content)
-    {
-        if (File.Exists(path)) File.Delete(path);
-
-        var file = new FileStream(path, FileMode.CreateNew);
-        var fileW = new StreamWriter(file, Encoding.UTF8);
-        fileW.Write(content);
-        fileW.Flush();
-        fileW.Close();
-        file.Close();
-    }
 
     private static string GetCreateFieldTypeStr(CreateFieldType type)
     {
