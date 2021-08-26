@@ -205,8 +205,7 @@ public class ExcelTool : EditorWindow
     {
         CreateFieldType res = default;
         var r = new Regex(@"(?<=\()(\w+)(?=\))");
-        var cc = r.Match(field);
-        var val = cc.Value;
+        var val = r.Match(field).Value;
 
         if (val == GetCreateFieldTypeStr(CreateFieldType.INT))
             res = CreateFieldType.INT;
