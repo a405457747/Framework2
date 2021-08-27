@@ -134,7 +134,6 @@ public class VersionTool : EditorWindow
         else
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
 
-        SetMatchWidthOrHeight(config);
 
         var pkgPath = GetPackagePath(pkgType, data.Channel);
         if (File.Exists(pkgPath)) File.Delete(pkgPath);
@@ -147,25 +146,7 @@ public class VersionTool : EditorWindow
         //EditorUtility.DisplayDialog("版本工具", "打包成功", "ok", "exit");
     }
 
-    private static void SetMatchWidthOrHeight(ProductConfig config) //横1竖0
-    {
-        float longNumber = config.ScreenLong;
-        float shortNumber = config.ScreenShort;
 
-        var canvasScaler = Game.CanvasTrans.GetComponent<CanvasScaler>();
-        canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-
-        if (config.LandScape)
-        {
-            canvasScaler.referenceResolution = new Vector2(longNumber, shortNumber);
-            canvasScaler.matchWidthOrHeight = 1;
-        }
-        else
-        {
-            canvasScaler.referenceResolution = new Vector2(shortNumber, longNumber);
-            canvasScaler.matchWidthOrHeight = 0;
-        }
-    }
 
     private static void LoadByVersionXML()
     {

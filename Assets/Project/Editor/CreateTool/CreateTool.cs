@@ -55,7 +55,10 @@ using UnityEngine.UI;
 
 public class #类名# : Panel
 {
-
+	public override void Initialize(PanelArgs arguments)
+	{
+		base.Initialize(arguments);
+	}
 //auto
    private void Awake()
 	{
@@ -241,6 +244,7 @@ public class #类名# : Panel
                 throw new Exception("have same event type");
 
         PanelTypes = StructHelper.GetEnums<PanelUIType>();
+        PanelTypes.Remove(PanelUIType.Null);
         PanelDic.Clear();
 
         PanelTraverse(root, root);
@@ -442,7 +446,7 @@ public class #类名# : Panel
             if (name.Contains(typeName)) return uiType;
         }
 
-        throw new Exception("Don't find uiType");
+        return PanelUIType.Null;
     }
 
     private static bool PanelIsNeedWriteObj(string name)
@@ -467,7 +471,10 @@ public class #类名# : Panel
                     var path = PanelGetPath(root, c);
                     var type = PanelGetUIType(name);
                     (string, PanelUIType) tu = (path, type);
-                    PanelDic.Add(name, tu);
+                    if (tu.Item2 != PanelUIType.Null)
+                    {
+                        PanelDic.Add(name, tu);
+                    }
                 }
                 else
                 {
