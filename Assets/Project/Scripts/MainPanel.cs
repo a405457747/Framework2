@@ -25,11 +25,11 @@ public class MainPanel : Panel
 	}
 	private Image BottomImage=null;
 	private Button ReadButton=null;
-	private Action ReadButtonAction{get;set;}
+	public Action ReadButtonAction{get;set;}
 	private Button WriteButton=null;
-	private Action WriteButtonAction{get;set;}
+	public Action WriteButtonAction{get;set;}
 	private Button BackupButton=null;
-	private Action BackupButtonAction{get;set;}
+	public Action BackupButtonAction{get;set;}
 	
     private void BottomImageRefresh(Sprite s)=>BottomImage.sprite=s;
 	    

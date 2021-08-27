@@ -113,6 +113,9 @@ public class ExcelTool : EditorWindow
         collection = t.Rows;
         row = t.Rows.Count;
         col = t.Columns.Count;
+        
+        stream.Close();
+        excelReader.Close();
     }
 
     private static void FillBigDic()

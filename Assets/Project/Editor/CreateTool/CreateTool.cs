@@ -347,19 +347,19 @@ public class #类名# : Panel
                     break;
                 case PanelUIType.Button:
                     bindStr = $"{bindStr}{name}.onClick.AddListener(()=>{{{name}Action?.Invoke();}});{format}";
-                    memberStr = $"{memberStr}private Action {name}Action{{get;set;}}{format}";
+                    memberStr = $"{memberStr}public Action {name}Action{{get;set;}}{format}";
                     break;
                 case PanelUIType.Toggle:
                     bindStr = $"{bindStr}{name}.onValueChanged.AddListener((b)=>{{{name}Action?.Invoke(b);}});{format}";
-                    memberStr = $"{memberStr}private Action<bool> {name}Action{{get;set;}}{format}";
+                    memberStr = $"{memberStr}public Action<bool> {name}Action{{get;set;}}{format}";
                     break;
                 case PanelUIType.Slider:
                     bindStr = $"{bindStr}{name}.onValueChanged.AddListener((f)=>{{{name}Action?.Invoke(f);}});{format}";
-                    memberStr = $"{memberStr}private Action<float> {name}Action{{get;set;}}{format}";
+                    memberStr = $"{memberStr}public Action<float> {name}Action{{get;set;}}{format}";
                     break;
                 case PanelUIType.Dropdown:
                     bindStr = $"{bindStr}{name}.onValueChanged.AddListener((i)=>{{{name}Action?.Invoke(i);}});{format}";
-                    memberStr = $"{memberStr}private Action<int> {name}Action{{get;set;}}{format}";
+                    memberStr = $"{memberStr}public Action<int> {name}Action{{get;set;}}{format}";
                     break;
                 case PanelUIType.InputField:
                     break;

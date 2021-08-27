@@ -5,7 +5,9 @@ using UniRx;
 
 public class Bread
 {
-    private DoubleReactiveProperty ProducedDate;
-    private string Content;
-    private string Title;
+    public string ID;
+    public string Title;
+    public string Content;
+    public double ProducedDate;
+
 }
