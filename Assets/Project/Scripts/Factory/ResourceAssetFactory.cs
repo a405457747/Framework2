@@ -59,6 +59,11 @@ public class ResourceAssetFactory : IAssetFactory
         return Resources.Load<GameObject>(name);
     }
 
+    public override GameObject loadGameObject(string name)
+    {
+        return Resources.Load<GameObject>(name);
+    }
+
     public override T LoadScriptableObject<T>()
     {
         return Resources.Load<ScriptableObject>(typeof(T).Name) as T;

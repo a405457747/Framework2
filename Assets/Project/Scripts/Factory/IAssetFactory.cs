@@ -13,6 +13,7 @@ public abstract class IAssetFactory
     public abstract SpriteAtlas LoadSpriteAtlas(string name);
     public abstract GameObject LoadPanel(string name);
     public abstract GameObject LoadPool(string name);
+    public abstract GameObject loadGameObject(string name);
     public abstract T LoadScriptableObject<T>() where T : ScriptableObject;
 }
 

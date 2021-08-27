@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,9 @@ public class Game : MonoBehaviour
         Release();
     }
 
+    private MainPanel _mainPanel;
+    private BreadMakerSystem _breadMakerSystem;
+
     public void Initinal()
     {
         var config = Factorys.GetAssetFactory()
@@ -47,9 +51,16 @@ public class Game : MonoBehaviour
         I = this;
 
         AddSystem<AudioSystem>();
-        AddSystem<BreadMakerSystem>();
 
-        OpenPanel<MainPanel>();
+        _mainPanel = OpenPanel<MainPanel>();
+        _breadMakerSystem = AddSystem<BreadMakerSystem>();
+
+        SetLoadExcelButton();
+    }
+
+    private void SetLoadExcelButton()
+    {
+        _mainPanel.BackupButtonAction += _breadMakerSystem.ReadExcelPath1;
     }
 
     private void Release()
@@ -63,7 +74,17 @@ public class Game : MonoBehaviour
     {
     }
 
-    private void AddSystem<T>() where T : GameSystem
+    public void CloseContentPanel()
+    {
+        ClosePanel<ContentPanel>();
+    }
+
+    public void OpenContentPanel(PanelArgs panelArgs)
+    {
+        OpenPanel<ContentPanel>(panelArgs);
+    }
+
+    private T AddSystem<T>() where T : GameSystem
     {
         var systemName = typeof(T).Name;
         var t = GetComponentInChildren<T>();
@@ -73,9 +94,11 @@ public class Game : MonoBehaviour
 
         _systems.Add(systemName, t);
         _systems[systemName].Initialize();
+
+        return _systems[systemName] as T;
     }
 
-    public void OpenPanel<T>(PanelArgs args = null, PanelTier tier = PanelTier.Default) where T : Panel
+    public T OpenPanel<T>(PanelArgs args = null, PanelTier tier = PanelTier.Default) where T : Panel
     {
         var panelName = typeof(T).Name;
         if (!_panels.ContainsKey(panelName))
@@ -92,6 +115,8 @@ public class Game : MonoBehaviour
 
         _panels[panelName].gameObject.Show();
         _panels[panelName].Open(args);
+
+        return _panels[panelName] as T;
     }
 
     public void ClosePanel<T>() where T : Panel

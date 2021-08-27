@@ -46,6 +46,26 @@ public class #类名# : GameSystem
     private static string format => EditorGame.format;
     private static readonly string CodeCreateDir = $"{Application.dataPath}/Project/Scripts";
 
+    private static readonly string UIInitClassStr = @"using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
+
+public class #类名# : MonoBehaviour
+{
+
+//auto
+   private void Awake()
+	{
+		#查找#
+        #绑定#
+	}
+	#成员#
+    #函数#    
+}
+";
+
     private static readonly string PanelInitClassStr =
         @"using UnityEngine;
 using System;
@@ -236,7 +256,7 @@ public class #类名# : Panel
         var root = selectobj[0].transform;
         var rootName = root.name;
 
-        if (rootName.Contains("Panel") == false) return;
+        if ((rootName.Contains("Panel") == false)) return;
 
         var haveE = root.GetComponent<HaveEvents>();
         if (haveE != null)
@@ -249,7 +269,32 @@ public class #类名# : Panel
 
         PanelTraverse(root, root);
 
-        PanelCreateFile(rootName, haveE);
+        UIAboutCreateFile(rootName, haveE, PanelInitClassStr);
+    }
+
+    [MenuItem("GameObject/CreateTool/UICreateCode", priority = 5)]
+    public static void UICreateCode()
+    {
+        var selectobj = Selection.gameObjects;
+        if (selectobj.Length != 1) return;
+
+        var root = selectobj[0].transform;
+        var rootName = root.name;
+
+        if ((rootName.Contains("UI") == false)) return;
+
+        var haveE = root.GetComponent<HaveEvents>();
+        /*if (haveE != null)
+            if (haveE.EventTypes.Distinct().Count() != haveE.EventTypes.Count())
+                throw new Exception("have same event type");*/
+
+        PanelTypes = StructHelper.GetEnums<PanelUIType>();
+        PanelTypes.Remove(PanelUIType.Null);
+        PanelDic.Clear();
+
+        PanelTraverse(root, root);
+
+        UIAboutCreateFile(rootName, haveE, UIInitClassStr);
     }
 
     [MenuItem("Framework/CreateTool/ReadEventsClass", priority = 21)]
@@ -323,7 +368,7 @@ public class #类名# : Panel
         fs.Close();
     }*/
 
-    private static void PanelCreateFile(string className, HaveEvents haveE)
+    private static void UIAboutCreateFile(string className, HaveEvents haveE, string initClassStr)
     {
         var memberStr = ""; //成员变量字符串
         var findStr = ""; //查询代码字符串
@@ -338,35 +383,48 @@ public class #类名# : Panel
             var type = kv.Value.Item2;
             memberStr =
                 $"{memberStr}private {type} {name}=null;{format}"; //memberstring += "private " + type + " " + name + " = null;\r\n\t";
-            findStr =
-                $"{findStr}{name}=transform.Find(\"{childPath}\").GetComponent<{type}>();{format}"; //loadedcontant += name + " = " + "transform.Find(" + "\"" + childPath + "\"" + ").GetComponent<" +    type +  ">();\r\n\t\t";
+            //loadedcontant += name + " = " + "transform.Find(" + "\"" + childPath + "\"" + ").GetComponent<" +    type +  ">();\r\n\t\t";
             switch (type)
             {
                 case PanelUIType.Text:
-                    funcStr = $"{funcStr}private void {name}Refresh(string t)=>{name}.text=t;{format}";
+                    findStr =
+                        $"{findStr}{name}=transform.Find(\"{childPath}\").GetComponent<{type}>();{format}";
+                    funcStr = $"{funcStr}public void {name}Refresh(string t)=>{name}.text=t;{format}";
                     break;
                 case PanelUIType.Button:
+                    findStr =
+                        $"{findStr}{name}=transform.Find(\"{childPath}\").GetComponent<{type}>();{format}";
                     bindStr = $"{bindStr}{name}.onClick.AddListener(()=>{{{name}Action?.Invoke();}});{format}";
                     memberStr = $"{memberStr}public Action {name}Action{{get;set;}}{format}";
                     break;
                 case PanelUIType.Toggle:
+                    findStr =
+                        $"{findStr}{name}=transform.Find(\"{childPath}\").GetComponent<{type}>();{format}";
                     bindStr = $"{bindStr}{name}.onValueChanged.AddListener((b)=>{{{name}Action?.Invoke(b);}});{format}";
                     memberStr = $"{memberStr}public Action<bool> {name}Action{{get;set;}}{format}";
                     break;
                 case PanelUIType.Slider:
+                    findStr =
+                        $"{findStr}{name}=transform.Find(\"{childPath}\").GetComponent<{type}>();{format}";
                     bindStr = $"{bindStr}{name}.onValueChanged.AddListener((f)=>{{{name}Action?.Invoke(f);}});{format}";
                     memberStr = $"{memberStr}public Action<float> {name}Action{{get;set;}}{format}";
                     break;
                 case PanelUIType.Dropdown:
+                    findStr =
+                        $"{findStr}{name}=transform.Find(\"{childPath}\").GetComponent<{type}>();{format}";
                     bindStr = $"{bindStr}{name}.onValueChanged.AddListener((i)=>{{{name}Action?.Invoke(i);}});{format}";
                     memberStr = $"{memberStr}public Action<int> {name}Action{{get;set;}}{format}";
                     break;
                 case PanelUIType.InputField:
                     break;
                 case PanelUIType.Image:
+                    findStr =
+                        $"{findStr}{name}=transform.Find(\"{childPath}\").GetComponent<{type}>();{format}";
                     funcStr = $"{funcStr}private void {name}Refresh(Sprite s)=>{name}.sprite=s;{format}";
                     break;
                 case PanelUIType.GameObject:
+                    findStr =
+                        $"{findStr}{name}=transform.Find(\"{childPath}\").gameObject;{format}";
                     funcStr =
                         $"{funcStr}private void {name}SetChild(Transform t)=>t.transform.SetParent({name}.transform, false);{format}";
                     break;
@@ -394,13 +452,13 @@ public class #类名# : Panel
 
             var splitStr = "//auto";
             var unchangeStr = Regex.Split(readStr, splitStr, RegexOptions.IgnoreCase)[0];
-            var changeStr = Regex.Split(PanelInitClassStr, splitStr, RegexOptions.IgnoreCase)[1];
+            var changeStr = Regex.Split(initClassStr, splitStr, RegexOptions.IgnoreCase)[1];
 
             classStr = $"{unchangeStr}{splitStr}{changeStr}";
         }
         else
         {
-            classStr = PanelInitClassStr;
+            classStr = initClassStr;
         }
 
         classStr = classStr.Replace("#类名#", className);
@@ -418,7 +476,7 @@ public class #类名# : Panel
 
         EditorGame.Refresh();
 
-        Log.LogPrint("Panel Create Success");
+        Log.LogPrint("Panel Or UI Create Success");
     }
 
     private static string PanelGetPath(Transform root, Transform cur)

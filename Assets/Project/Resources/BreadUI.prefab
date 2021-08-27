@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 6060144028884688875}
   - component: {fileID: 245974679095063068}
   - component: {fileID: 5869766935306365506}
+  - component: {fileID: 4312248034205781080}
   m_Layer: 5
-  m_Name: BreadButton
+  m_Name: BreadUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119,6 +120,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4312248034205781080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4539681571260812961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b27082e908383a44aaf9a4d27761dc14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8684989988547286866
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +144,7 @@ GameObject:
   - component: {fileID: 231796998166819258}
   - component: {fileID: 5212323406262664442}
   m_Layer: 5
-  m_Name: Text
+  m_Name: TitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

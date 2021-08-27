@@ -41,7 +41,13 @@ public class BreadMakerSystem : GameSystem
             WriteExcel(path1);
         }
 
+        ReadExcelPath1();
+    }
+
+    public void ReadExcelPath1()
+    {
         ReadExcel(path1);
+        Incident.SendEvent<ReadSuccessEvent>(new ReadSuccessEvent() {list = datas});
     }
 
     void OpenTargetDir()
@@ -68,7 +74,14 @@ public class BreadMakerSystem : GameSystem
             b.ID = Convert.ToString(collection[i][0]);
             b.Title = Convert.ToString(collection[i][1]);
             b.Content = Convert.ToString(collection[i][2]);
-            b.ProducedDate = Convert.ToDouble(collection[i][3]);
+            var dataStr = collection[i][3].ToString();
+            if (string.IsNullOrEmpty(dataStr))
+            {
+            }
+            else
+            {
+                b.ProducedDate = Convert.ToDouble(dataStr);
+            }
 
             datas.Add(b);
         }
