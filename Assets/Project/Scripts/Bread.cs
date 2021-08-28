@@ -9,5 +9,10 @@ public class Bread
     public string Title;
     public string Content;
     public double ProducedDate;
+    public int Ripe;
 
+    public string GetRipeStr()
+    {
+        return $"熟度Lv.{Ripe}";
+    }
 }

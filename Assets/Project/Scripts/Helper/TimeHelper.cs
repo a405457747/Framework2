@@ -7,6 +7,7 @@ public class TimeHelper
     public const int Hour = Minute * 60;
     public const int Day = Hour * 24;
     public const int Week = Day * 7;
+    public const int Month = Day * 30;
     public const string DateFormat = "yyyy_MMdd_HHmm";
     public static readonly DateTime Greenwich = CreateDateTime(1970, 1, 1);
 

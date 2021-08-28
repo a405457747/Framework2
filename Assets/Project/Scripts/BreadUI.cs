@@ -6,25 +6,62 @@ using UnityEngine.UI;
 
 public class BreadUI : MonoBehaviour
 {
-    public void Init(Bread bread)
+    private Button btn;
+    private Bread _bread;
+
+    public void Init(Bread b)
     {
-        GetComponent<Button>().onClick.AddListener(() =>
+        _bread = b;
+
+        btn = GetComponent<Button>();
+
+        btn.onClick.AddListener(() =>
         {
             Game.I.OpenContentPanel(new ContentPanelArg()
             {
-                MainStr = bread.Content
+                MainStr = _bread.Content
             });
+
+            Incident.SendEvent<BtnClickEvent>(new BtnClickEvent()
+            {
+                btnIndex = gameObject.Number()
+            });
+
         });
-        TitleTextRefresh(bread.Title);
+        TitleTextRefresh(_bread.Title);
+        RefreshPipe();
+    }
+
+    public void RefreshPipe()
+    {
+        RipeTextRefresh(_bread.GetRipeStr());
+    }
+
+    public Bread GetBread()
+    {
+        return _bread;
+    }
+
+    public bool GetBtnInteraction()
+    {
+        return btn.interactable;
+    }
+    
+    public void SetBtnInteraction(bool interaction)
+    {
+        btn.interactable = interaction;
     }
 
 //auto
     private void Awake()
     {
         TitleText = transform.Find("TitleText").GetComponent<Text>();
+        RipeText = transform.Find("RipeText").GetComponent<Text>();
     }
 
     private Text TitleText = null;
+    private Text RipeText = null;
 
     public void TitleTextRefresh(string t) => TitleText.text = t;
+    public void RipeTextRefresh(string t) => RipeText.text = t;
 }

@@ -39,12 +39,19 @@ public class Game : MonoBehaviour
 
     private MainPanel _mainPanel;
     private BreadMakerSystem _breadMakerSystem;
+    public TimeSystem _timeSystem;
 
     public void Initinal()
     {
         var config = Factorys.GetAssetFactory()
             .LoadScriptableObject<ProductConfigList>().list[0];
         SetMatchWidthOrHeight(config);
+
+        var versionToolData = Factorys.GetAssetFactory().LoadScriptableObject<VersionToolData>();
+        if (versionToolData.Debug)
+        {
+            gameObject.AddComponent<OutLog>().Init();
+        }
 
         DontDestroyOnLoad(gameObject);
 
@@ -53,14 +60,26 @@ public class Game : MonoBehaviour
         AddSystem<AudioSystem>();
 
         _mainPanel = OpenPanel<MainPanel>();
+        _timeSystem = AddSystem<TimeSystem>();
         _breadMakerSystem = AddSystem<BreadMakerSystem>();
 
-        SetLoadExcelButton();
+        SetWriteExcelButton();
+        SetBackupExcelButton();
+    }
+
+    private void SetBackupExcelButton()
+    {
+        _mainPanel.BackupButtonAction += _breadMakerSystem.WriteExcelPath2;
+    }
+
+    private void SetWriteExcelButton()
+    {
+        _mainPanel.WriteButtonAction += _breadMakerSystem.WriteExcelPath1;
     }
 
     private void SetLoadExcelButton()
     {
-        _mainPanel.BackupButtonAction += _breadMakerSystem.ReadExcelPath1;
+        _mainPanel.ReadButtonAction += _breadMakerSystem.ReadExcelPath1;
     }
 
     private void Release()
@@ -77,6 +96,11 @@ public class Game : MonoBehaviour
     public void CloseContentPanel()
     {
         ClosePanel<ContentPanel>();
+    }
+
+    public void OpenTipPanel(PanelArgs panelArgs)
+    {
+        OpenPanel<TipPanel>(panelArgs);
     }
 
     public void OpenContentPanel(PanelArgs panelArgs)
@@ -98,14 +122,13 @@ public class Game : MonoBehaviour
         return _systems[systemName] as T;
     }
 
-    public T OpenPanel<T>(PanelArgs args = null, PanelTier tier = PanelTier.Default) where T : Panel
+    public T OpenPanel<T>(PanelArgs args = null) where T : Panel
     {
         var panelName = typeof(T).Name;
         if (!_panels.ContainsKey(panelName))
         {
             var go = Factorys.GetAssetFactory().LoadPanel(panelName);
-            var tempGo = Instantiate(go,
-                CanvasTrans.Find(tier.ToString()), false);
+            var tempGo = Instantiate(go);
             tempGo.Name(panelName);
 
             _panels.Add(panelName, tempGo.GetComponent<Panel>());

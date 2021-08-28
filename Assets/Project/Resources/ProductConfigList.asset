@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   list:
   - ID: 1
-    CompanyName: Apple
-    ProductName: iPhone
+    CompanyName: SkyAllen
+    ProductName: MemoryBread
     ScreenLong: 1280
     ScreenShort: 720
     LandScape: 0

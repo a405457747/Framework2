@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d8b9c6c8e7ab894ab137956cb39c427, type: 3}
   m_Name: VersionToolData
   m_EditorClassIdentifier: 
-  Channel: 3
-  Debug: 0
+  Channel: 2
+  Debug: 1

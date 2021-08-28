@@ -13,6 +13,7 @@ public abstract class GameSystem : MonoBehaviour
 
     public virtual void Initialize()
     {
+        game = FindObjectOfType<Game>();
     }
 
     public virtual void Release()

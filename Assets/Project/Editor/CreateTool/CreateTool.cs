@@ -73,6 +73,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+public class #类名#Args : PanelArgs
+{
+}
+
 public class #类名# : Panel
 {
 	public override void Initialize(PanelArgs arguments)
