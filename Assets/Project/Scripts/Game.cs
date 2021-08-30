@@ -38,7 +38,7 @@ public class Game : MonoBehaviour
     }
 
     private MainPanel _mainPanel;
-    private BreadMakerSystem _breadMakerSystem;
+    public BreadMakerSystem _breadMakerSystem;
     public TimeSystem _timeSystem;
 
     public void Initinal()
@@ -50,36 +50,19 @@ public class Game : MonoBehaviour
         var versionToolData = Factorys.GetAssetFactory().LoadScriptableObject<VersionToolData>();
         if (versionToolData.Debug)
         {
-            gameObject.AddComponent<OutLog>().Init();
+            //gameObject.AddComponent<OutLog>().Init();
         }
 
         DontDestroyOnLoad(gameObject);
 
         I = this;
 
-        AddSystem<AudioSystem>();
 
-        _mainPanel = OpenPanel<MainPanel>();
+        AddSystem<AudioSystem>();
         _timeSystem = AddSystem<TimeSystem>();
         _breadMakerSystem = AddSystem<BreadMakerSystem>();
 
-        SetWriteExcelButton();
-        SetBackupExcelButton();
-    }
-
-    private void SetBackupExcelButton()
-    {
-        _mainPanel.BackupButtonAction += _breadMakerSystem.WriteExcelPath2;
-    }
-
-    private void SetWriteExcelButton()
-    {
-        _mainPanel.WriteButtonAction += _breadMakerSystem.WriteExcelPath1;
-    }
-
-    private void SetLoadExcelButton()
-    {
-        _mainPanel.ReadButtonAction += _breadMakerSystem.ReadExcelPath1;
+        _mainPanel = OpenPanel<MainPanel>();
     }
 
     private void Release()
@@ -165,10 +148,6 @@ public class Game : MonoBehaviour
             Destroy(_panels[panelName].gameObject);
             _panels.Remove(panelName);
         }
-    }
-
-    private void Reset()
-    {
     }
 
     private static void SetMatchWidthOrHeight(ProductConfig config) //横1竖0

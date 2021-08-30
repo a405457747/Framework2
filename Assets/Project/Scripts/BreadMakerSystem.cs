@@ -42,15 +42,12 @@ public class BreadMakerSystem : GameSystem
             WriteExcel(path1, false);
         }
 
-        this.Delay(3f, () =>
-        {
-            var temp = new FileInfo(path1);
-            game.OpenTipPanel(new TipPanelArgs() {mainTip = "初始化成功" + temp.Exists + path1});
+        var temp = new FileInfo(path1);
+        game.OpenTipPanel(new TipPanelArgs() {mainTip = "初始化成功" + temp.Exists + path1});
 
-            ReadExcelPath1();
+        ReadExcelPath1();
 
-            game._timeSystem.StartPerSecondSendEvent();
-        });
+        game._timeSystem.StartPerSecondSendEvent();
     }
 
     private void PerSecondEventCallback(PerSecondEvent obj)
