@@ -7,17 +7,14 @@ using UnityEngine.UI;
 public class Game : MonoBehaviour
 {
     public const string SystemSuffix = "System";
-    private static Game _instance;
     public static Game I;
     private readonly Dictionary<string, Panel> _panels = new Dictionary<string, Panel>();
     private readonly Dictionary<string, GameSystem> _systems = new Dictionary<string, GameSystem>();
+    public static Transform CanvasTrans => GameObject.Find("Game/Canvas").transform;
 
     private Game()
     {
     }
-
-    public static Transform CanvasTrans => GameObject.Find("Game/Canvas").transform;
-
 
     private void Start()
     {
@@ -28,7 +25,6 @@ public class Game : MonoBehaviour
     {
         InputProcess();
         foreach (var s in _systems.Values) s.EachFrame();
-
         foreach (var p in _panels.Values) p.EachFrame();
     }
 
@@ -37,10 +33,11 @@ public class Game : MonoBehaviour
         Release();
     }
 
-    private MainPanel _mainPanel;
     public BreadMakerSystem _breadMakerSystem;
-    public TimeSystem _timeSystem;
-
+    public MainPanel _mainPanel;
+    public ContentPanel contentPanel;
+    public TipPanel tipPanel;
+    
     public void Initinal()
     {
         var config = Factorys.GetAssetFactory()
@@ -57,38 +54,21 @@ public class Game : MonoBehaviour
 
         I = this;
 
-
-        AddSystem<AudioSystem>();
-        _timeSystem = AddSystem<TimeSystem>();
         _breadMakerSystem = AddSystem<BreadMakerSystem>();
-
-        _mainPanel = OpenPanel<MainPanel>();
+        
+        _mainPanel = AddPanel<MainPanel>();
+        contentPanel = AddPanel<ContentPanel>();
+        tipPanel = AddPanel<TipPanel>();
     }
 
     private void Release()
     {
         foreach (var s in _systems.Values) s.Release();
-
         foreach (var p in _panels.Values) p.Release();
     }
 
     private void InputProcess()
     {
-    }
-
-    public void CloseContentPanel()
-    {
-        ClosePanel<ContentPanel>();
-    }
-
-    public void OpenTipPanel(PanelArgs panelArgs)
-    {
-        OpenPanel<TipPanel>(panelArgs);
-    }
-
-    public void OpenContentPanel(PanelArgs panelArgs)
-    {
-        OpenPanel<ContentPanel>(panelArgs);
     }
 
     private T AddSystem<T>() where T : GameSystem
@@ -105,7 +85,7 @@ public class Game : MonoBehaviour
         return _systems[systemName] as T;
     }
 
-    public T OpenPanel<T>(PanelArgs args = null) where T : Panel
+    public T AddPanel<T>() where T : Panel
     {
         var panelName = typeof(T).Name;
         if (!_panels.ContainsKey(panelName))
@@ -115,41 +95,12 @@ public class Game : MonoBehaviour
             tempGo.Name(panelName);
 
             _panels.Add(panelName, tempGo.GetComponent<Panel>());
-
-            _panels[panelName].Initialize(args);
+            _panels[panelName].Initialize();
         }
-
-        _panels[panelName].gameObject.Show();
-        _panels[panelName].Open(args);
 
         return _panels[panelName] as T;
     }
-
-    public void ClosePanel<T>() where T : Panel
-    {
-        var panelName = typeof(T).Name;
-
-        if (_panels.ContainsKey(panelName))
-        {
-            _panels[panelName].Close();
-            _panels[panelName].gameObject.Hide();
-        }
-    }
-
-    public void ReleasePanel<T>() where T : Panel
-    {
-        var panelName = typeof(T).Name;
-
-        if (_panels.ContainsKey(panelName))
-        {
-            ClosePanel<T>();
-
-            _panels[panelName].Release();
-            Destroy(_panels[panelName].gameObject);
-            _panels.Remove(panelName);
-        }
-    }
-
+    
     private static void SetMatchWidthOrHeight(ProductConfig config) //横1竖0
     {
         float longNumber = config.ScreenLong;
@@ -169,14 +120,4 @@ public class Game : MonoBehaviour
             canvasScaler.matchWidthOrHeight = 0;
         }
     }
-}
-
-public enum PanelTier
-{
-    Default,
-    PopUp,
-    AlwaysInFront,
-    Guide,
-    Effect,
-    Curtain
 }

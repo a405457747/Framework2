@@ -11,10 +11,11 @@ using Excel;
 public class BreadMakerSystem : GameSystem
 {
     private string TargetDir => Application.persistentDataPath;
-    private string path1 => TargetDir + "/Data.xlsx";
-    private string path2 => TargetDir + "/DataBackup.xlsx";
+    private string DataPath => TargetDir + "/Data.xlsx";
+    private string DataBackupPath => TargetDir + "/DataBackup.xlsx";
 
-    private List<Bread> datas;
+    private List<Bread> _breads = new List<Bread>();
+    public List<double> times = new List<double>();
 
     public BreadMakerSystem(Game game) : base(game)
     {
@@ -24,59 +25,58 @@ public class BreadMakerSystem : GameSystem
     {
         base.Initialize();
 
-        Init();
-    }
-
-    void Init()
-    {
-        DirectoryInfo di = new DirectoryInfo(TargetDir);
-        if (di.Exists == false)
+        if (Directory.Exists(TargetDir) == false)
         {
-            di.Create();
+            Directory.CreateDirectory(TargetDir);
         }
 
-        FileInfo dataF = new FileInfo(path1);
-
-        if (dataF.Exists == false)
+        if (File.Exists(DataPath) == false)
         {
-            WriteExcel(path1, false);
+            WriteExcel(DataPath, false);
         }
 
-        var temp = new FileInfo(path1);
-        game.OpenTipPanel(new TipPanelArgs() {mainTip = "初始化成功" + temp.Exists + path1});
-
-        ReadExcelPath1();
-
-        game._timeSystem.StartPerSecondSendEvent();
+        ReadExcel(DataPath);
     }
 
-    private void PerSecondEventCallback(PerSecondEvent obj)
+    public bool CanInteraction(Bread bread, double timeStamp)
     {
-    }
+        double p = bread.ProducedDate;
+        int ripe = bread.Ripe;
 
-    public void ReadExcelPath1()
-    {
-        ReadExcel(path1);
-        if (datas == null)
+        double interval = timeStamp - p;
+
+        int level = 0;
+        for (int i = 0; i < times.Count; i++)
         {
-            return;
+            var per = times[i];
+
+            if (interval >= per)
+            {
+                level += 1;
+            }
+            else
+            {
+                break;
+            }
         }
 
-        Incident.SendEvent<ReadSuccessEvent>(new ReadSuccessEvent() {list = datas});
+        return level >= ripe;
     }
 
-    public void WriteExcelPath1()
+
+    private double GetTimeStamp()
     {
-        WriteExcel(path1, true);
-        game.OpenTipPanel(new TipPanelArgs() {mainTip = "执行成功了，请编辑Content和Title所对应的单元格(其余不需要编辑)，然后重新启动应用吧！"});
-        this.Delay(3f, () => { OpenTargetDir(); });
+        return TimeHelper.GetNowTimeStamp();
+    }
+    
+    public void WriteData()
+    {
+        WriteExcel(DataPath, true);
     }
 
-    public void WriteExcelPath2()
+    public void WriteDataBackup()
     {
-        WriteExcel(path2, true);
-        game.OpenTipPanel(new TipPanelArgs() {mainTip = "执行成功了，如需要使用备份，把DataBackup重命名为Data，然后重新启动应用吧！"});
-        this.Delay(3f, () => { OpenTargetDir(); });
+        WriteExcel(DataBackupPath, true);
     }
 
     void OpenTargetDir()
@@ -97,7 +97,7 @@ public class BreadMakerSystem : GameSystem
             var row = t.Rows.Count;
             var col = t.Columns.Count;
 
-            datas = new List<Bread>();
+            _breads = new List<Bread>();
             for (int i = 1; i < row; i++)
             {
                 Bread b = new Bread();
@@ -108,7 +108,7 @@ public class BreadMakerSystem : GameSystem
                 var pStr = collection[i][3].ToString();
                 if (string.IsNullOrEmpty(pStr))
                 {
-                    b.ProducedDate = game._timeSystem.GetTimeStamp();
+                    b.ProducedDate = GetTimeStamp();
                 }
                 else
                 {
@@ -125,7 +125,7 @@ public class BreadMakerSystem : GameSystem
                     b.Ripe = Convert.ToInt32(rStr);
                 }
 
-                datas.Add(b);
+                _breads.Add(b);
             }
 
             stream.Close();
@@ -133,7 +133,7 @@ public class BreadMakerSystem : GameSystem
         }
         catch (Exception e)
         {
-            game.OpenTipPanel(new TipPanelArgs() {mainTip = "发生错误，请先关闭Excel，再重试" + e.ToString()});
+            //  game.OpenPanel<TipPanel>(new TipPanelArgs() {mainTip = "发生错误，请先关闭Excel，再重试" + e.ToString()});
         }
     }
 
@@ -163,14 +163,14 @@ public class BreadMakerSystem : GameSystem
                 worksheet.Cells[1, 4].Value = "ProducedDate";
                 worksheet.Cells[1, 5].Value = "Ripe";
 
-                if (datas == null)
+                if (_breads == null)
                 {
-                    datas = new List<Bread>();
+                    _breads = new List<Bread>();
                 }
 
-                for (var index = 0; index < datas.Count; index++)
+                for (var index = 0; index < _breads.Count; index++)
                 {
-                    var bread = datas[index];
+                    var bread = _breads[index];
                     worksheet.Cells[(index + 2), 1].Value = Convert.ToString(bread.ID);
                     worksheet.Cells[(index + 2), 2].Value = Convert.ToString(bread.Title);
                     worksheet.Cells[(index + 2), 3].Value = Convert.ToString(bread.Content);
@@ -183,20 +183,12 @@ public class BreadMakerSystem : GameSystem
         }
         catch (Exception e)
         {
-            game.OpenTipPanel(new TipPanelArgs() {mainTip = "发生错误，请先关闭Excel，再重试"});
+            //game.OpenPanel<TipPanel>(new TipPanelArgs() {mainTip = "发生错误，请先关闭Excel，再重试" + e.ToString()});
         }
-    }
-
-
-    public override void Release()
-    {
-        base.Release();
     }
 
 //auto
     private void Awake()
     {
-        Incident.DeleteEvent<PerSecondEvent>(PerSecondEventCallback);
-        Incident.RigisterEvent<PerSecondEvent>(PerSecondEventCallback);
     }
 }

@@ -17,19 +17,7 @@ public class BreadUI : MonoBehaviour
 
         btn.onClick.AddListener(() =>
         {
-            Game.I.OpenContentPanel(new ContentPanelArg()
-            {
-                MainStr = _bread.Content
-            });
-
-            Incident.SendEvent<BtnClickEvent>(new BtnClickEvent()
-            {
-                btnIndex = gameObject.Number()
-            });
-
         });
-        TitleTextRefresh(_bread.Title);
-        RefreshPipe();
     }
 
     public void RefreshPipe()

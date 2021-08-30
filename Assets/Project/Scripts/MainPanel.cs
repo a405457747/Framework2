@@ -8,12 +8,13 @@ public class MainPanel : Panel
 {
     private List<BreadUI> breadGos = new List<BreadUI>();
 
-    public override void Initialize(PanelArgs arguments)
+    public override void Initialize()
     {
-        base.Initialize(arguments);
+        base.Initialize();
+        Show();
 
-        BackupButtonAction += Game.I._breadMakerSystem.WriteExcelPath2;
-        WriteButtonAction += Game.I._breadMakerSystem.WriteExcelPath1;
+        BackupButtonAction += Game.I._breadMakerSystem.WriteDataBackup;
+        WriteButtonAction += Game.I._breadMakerSystem.WriteData;
     }
 
     private void ReadSuccessEventCallback(ReadSuccessEvent obj)
@@ -39,7 +40,7 @@ public class MainPanel : Panel
         foreach (var breadUI in breadGos)
         {
             var b = breadUI.GetBread();
-            bool btnInteraction = game._timeSystem.CanInteraction(b, obj.timeStamp);
+            bool btnInteraction = game._breadMakerSystem.CanInteraction(b, obj.timeStamp);
             breadUI.SetBtnInteraction(btnInteraction);
             if (btnInteraction == true)
             {
@@ -62,42 +63,36 @@ public class MainPanel : Panel
         breadGos[index].RefreshPipe();
     }
 
-
 //auto
-    private void Awake()
-    {
-        TopImage = transform.Find("TopImage").GetComponent<Image>();
-        BreadGameObjects = transform.Find("Scroll View/Viewport/BreadGameObjects").gameObject;
-        BottomImage = transform.Find("BottomImage").GetComponent<Image>();
-        ReadButton = transform.Find("BottomImage/ReadButton").GetComponent<Button>();
-        WriteButton = transform.Find("BottomImage/WriteButton").GetComponent<Button>();
-        BackupButton = transform.Find("BottomImage/BackupButton").GetComponent<Button>();
-        LvItemsGameObject = transform.Find("BottomImage/LvItemsGameObject").gameObject;
-
-        ReadButton.onClick.AddListener(() => { ReadButtonAction?.Invoke(); });
-        WriteButton.onClick.AddListener(() => { WriteButtonAction?.Invoke(); });
-        BackupButton.onClick.AddListener(() => { BackupButtonAction?.Invoke(); });
-        Incident.DeleteEvent<ReadSuccessEvent>(ReadSuccessEventCallback);
-        Incident.RigisterEvent<ReadSuccessEvent>(ReadSuccessEventCallback);
-        Incident.DeleteEvent<PerSecondEvent>(PerSecondEventCallback);
-        Incident.RigisterEvent<PerSecondEvent>(PerSecondEventCallback);
-        Incident.DeleteEvent<BtnClickEvent>(BtnClickEventCallback);
-        Incident.RigisterEvent<BtnClickEvent>(BtnClickEventCallback);
-    }
-
-    private Image TopImage = null;
-    private GameObject BreadGameObjects = null;
-    private Image BottomImage = null;
-    private Button ReadButton = null;
-    public Action ReadButtonAction { get; set; }
-    private Button WriteButton = null;
-    public Action WriteButtonAction { get; set; }
-    private Button BackupButton = null;
-    public Action BackupButtonAction { get; set; }
-    private GameObject LvItemsGameObject = null;
-
-    private void TopImageRefresh(Sprite s) => TopImage.sprite = s;
-    private void BreadGameObjectsSetChild(Transform t) => t.transform.SetParent(BreadGameObjects.transform, false);
-    private void BottomImageRefresh(Sprite s) => BottomImage.sprite = s;
-    private void LvItemsGameObjectSetChild(Transform t) => t.transform.SetParent(LvItemsGameObject.transform, false);
+   private void Awake()
+	{
+		TopImage=transform.Find("TopImage").GetComponent<Image>();
+	BreadGameObjects=transform.Find("Scroll View/Viewport/BreadGameObjects").gameObject;
+	BottomImage=transform.Find("BottomImage").GetComponent<Image>();
+	WriteButton=transform.Find("BottomImage/WriteButton").GetComponent<Button>();
+	ReadButton=transform.Find("BottomImage/ReadButton").GetComponent<Button>();
+	BackupButton=transform.Find("BottomImage/BackupButton").GetComponent<Button>();
+	LvItemsGameObject=transform.Find("BottomImage/LvItemsGameObject").gameObject;
+	
+        WriteButton.onClick.AddListener(()=>{WriteButtonAction?.Invoke();});
+	ReadButton.onClick.AddListener(()=>{ReadButtonAction?.Invoke();});
+	BackupButton.onClick.AddListener(()=>{BackupButtonAction?.Invoke();});
+	
+	}
+	private Image TopImage=null;
+	private GameObject BreadGameObjects=null;
+	private Image BottomImage=null;
+	private Button WriteButton=null;
+	public Action WriteButtonAction{get;set;}
+	private Button ReadButton=null;
+	public Action ReadButtonAction{get;set;}
+	private Button BackupButton=null;
+	public Action BackupButtonAction{get;set;}
+	private GameObject LvItemsGameObject=null;
+	
+    private void TopImageRefresh(Sprite s)=>TopImage.sprite=s;
+	private void BreadGameObjectsSetChild(Transform t)=>t.transform.SetParent(BreadGameObjects.transform, false);
+	private void BottomImageRefresh(Sprite s)=>BottomImage.sprite=s;
+	private void LvItemsGameObjectSetChild(Transform t)=>t.transform.SetParent(LvItemsGameObject.transform, false);
+	    
 }

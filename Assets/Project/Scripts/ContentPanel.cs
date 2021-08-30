@@ -5,26 +5,13 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ContentPanelArg : PanelArgs
-{
-    public string MainStr { get; set; }
-}
 
 public class ContentPanel : Panel
 {
-    public override void Initialize(PanelArgs arguments)
+    public override void Initialize()
     {
         tier = PanelTier.PopUp;
-        base.Initialize(arguments);
-        CloseButtonAction += () => { game.ClosePanel<ContentPanel>(); };
-    }
-
-    public override void Open(PanelArgs arguments)
-    {
-        base.Open(arguments);
-
-        ContentPanelArg contentPanelArg = arguments as ContentPanelArg;
-        MainTextRefresh(contentPanelArg.MainStr);
+        base.Initialize();
     }
 
     //auto
