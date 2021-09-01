@@ -124,10 +124,10 @@ public class VersionTool : EditorWindow
         PlayerSettings.companyName = config.CompanyName;
         PlayerSettings.productName = config.ProductName;
         PlayerSettings.applicationIdentifier = applicationIdentifier;
-        PlayerSettings.Android.keyaliasName = "a";
+        /*PlayerSettings.Android.keyaliasName = "a";
         PlayerSettings.keyaliasPass = "yn1234";
         PlayerSettings.keystorePass = "yn1234";
-        PlayerSettings.Android.keystoreName = EditorGame.GetMyOtherPath() + @"\user.keystore";
+        PlayerSettings.Android.keystoreName = EditorGame.GetMyOtherPath() + @"\user.keystore";*/
 
         if (config.LandScape)
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;

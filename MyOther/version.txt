@@ -14,4 +14,6 @@
   <Ver Number="14" Explain="1" />
   <Ver Number="15" Explain="1" />
   <Ver Number="16" Explain="1" />
+  <Ver Number="17" Explain="1" />
+  <Ver Number="18" Explain="1" />
 </Root>

@@ -100,6 +100,7 @@ public class Game : MonoBehaviour
 
             _panels.Add(panelName, tempGo.GetComponent<Panel>());
             _panels[panelName].Initialize();
+            
         }
 
         return _panels[panelName] as T;
